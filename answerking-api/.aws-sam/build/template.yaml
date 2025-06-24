@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AnswerKing API
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GetCategoriesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: categories/handler.lambda_handler
+      Runtime: python3.13
+      Events:
+        ApiGet:
+          Type: Api
+          Properties:
+            Path: /categories
+            Method: GET
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName: Categories
+      CodeUri: GetCategoriesFunction
+    Metadata:
+      SamResourceId: GetCategoriesFunction
+Outputs:
+  CategoriesApi:
+    Description: Endpoint for /categories
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories
