@@ -53,7 +53,7 @@ Resources:
             Path: /items/{id}
             Method: DELETE
       Policies:
-      - DynamoDBWritePolicy:
+      - DynamoDBCrudPolicy:
           TableName: Items
 
 Outputs:

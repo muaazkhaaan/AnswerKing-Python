@@ -7,18 +7,34 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['ITEMS_TABLE'])
 
 def lambda_handler(event, context):
-    body = json.loads(event['body'])
+    try:
+        body = json.loads(event['body'])
 
-    item = {
-        'id': body['id'],
-        'name': body['name'],
-        'price': Decimal(str(body['price'])),
-        'category_id': body.get('category_id', None)
-    }
+        # Validate required fields
+        required_fields = ['id', 'name', 'price', 'category']
+        for field in required_fields:
+            if field not in body:
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({'error': f'Missing required field: {field}'})
+                }
 
-    table.put_item(Item=item)
+        item = {
+            'id': body['id'],
+            'name': body['name'],
+            'price': Decimal(str(body['price'])),
+            'category': body['category']
+        }
 
-    return {
-        'statusCode': 201,
-        'body': json.dumps({'message': 'Item created'})
-    }
+        table.put_item(Item=item)
+
+        return {
+            'statusCode': 201,
+            'body': json.dumps({'message': 'Item created'})
+        }
+
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }

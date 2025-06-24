@@ -55,7 +55,7 @@ Resources:
             Path: /items/{id}
             Method: DELETE
       Policies:
-      - DynamoDBWritePolicy:
+      - DynamoDBCrudPolicy:
           TableName: Items
     Metadata:
       SamResourceId: DeleteItemFunction
