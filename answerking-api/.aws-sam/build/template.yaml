@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: AnswerKing API
 Transform: AWS::Serverless-2016-10-31
+Parameters:
+  DeployedByTag:
+    Description: Standard deploy tag
+    Type: String
+    Default: Muaaz
 Resources:
   GetCategoriesFunction:
     Type: AWS::Serverless::Function
@@ -17,6 +22,12 @@ Resources:
       - DynamoDBReadPolicy:
           TableName: Categories
       CodeUri: GetCategoriesFunction
+    Tags:
+    - Key: managed-by
+      Value: CloudFormation
+    - Key: deployed-by
+      Value:
+        Ref: DeployedByTag
     Metadata:
       SamResourceId: GetCategoriesFunction
   CreateItemFunction:
@@ -37,6 +48,12 @@ Resources:
       Policies:
       - DynamoDBWritePolicy:
           TableName: Items
+    Tags:
+    - Key: managed-by
+      Value: CloudFormation
+    - Key: deployed-by
+      Value:
+        Ref: DeployedByTag
     Metadata:
       SamResourceId: CreateItemFunction
   DeleteItemFunction:
@@ -57,6 +74,12 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: Items
+    Tags:
+    - Key: managed-by
+      Value: CloudFormation
+    - Key: deployed-by
+      Value:
+        Ref: DeployedByTag
     Metadata:
       SamResourceId: DeleteItemFunction
 Outputs:

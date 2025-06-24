@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: AnswerKing API
-Transform: AWS::Serverless-2016-10-31
+Transform: AWS::Serverless-2016-10-31 # Tell AWS treat this file as a SAM template
+
+Parameters:
+  DeployedByTag:
+    Description: Standard deploy tag
+    Type: String
+    Default: Muaaz
 
 Resources:
   GetCategoriesFunction:
@@ -17,6 +23,11 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: Categories
+    Tags:
+        - Key: managed-by
+          Value: CloudFormation
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
 
   CreateItemFunction:
     Type: AWS::Serverless::Function
@@ -36,6 +47,11 @@ Resources:
       Policies:
       - DynamoDBWritePolicy:
           TableName: Items
+    Tags:
+        - Key: managed-by
+          Value: CloudFormation
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
 
   DeleteItemFunction:
     Type: AWS::Serverless::Function
@@ -55,6 +71,11 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: Items
+    Tags:
+        - Key: managed-by
+          Value: CloudFormation
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
 
 Outputs:
   CategoriesApi:
