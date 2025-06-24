@@ -10,7 +10,7 @@ Resources:
   GetCategoriesFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: categories/handler.lambda_handler
+      Handler: categories/view_categories.lambda_handler
       Runtime: python3.13
       Events:
         ApiGet:
@@ -23,13 +23,36 @@ Resources:
           TableName: Categories
       CodeUri: GetCategoriesFunction
     Tags:
-    - Key: managed-by
-      Value: CloudFormation
+    - Key: Project
+      Value: AnswerKing
     - Key: deployed-by
       Value:
         Ref: DeployedByTag
     Metadata:
       SamResourceId: GetCategoriesFunction
+  GetItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: items/view_item.lambda_handler
+      Runtime: python3.13
+      Events:
+        ApiGet:
+          Type: Api
+          Properties:
+            Path: /items
+            Method: GET
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName: Items
+      CodeUri: GetItemsFunction
+    Tags:
+    - Key: Project
+      Value: AnswerKing
+    - Key: deployed-by
+      Value:
+        Ref: DeployedByTag
+    Metadata:
+      SamResourceId: GetItemsFunction
   CreateItemFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -43,14 +66,14 @@ Resources:
         CreateItemAPI:
           Type: Api
           Properties:
-            Path: /items
+            Path: /create-items
             Method: POST
       Policies:
       - DynamoDBWritePolicy:
           TableName: Items
     Tags:
-    - Key: managed-by
-      Value: CloudFormation
+    - Key: Project
+      Value: AnswerKing
     - Key: deployed-by
       Value:
         Ref: DeployedByTag
@@ -69,29 +92,33 @@ Resources:
         DeleteItemAPI:
           Type: Api
           Properties:
-            Path: /items/{id}
+            Path: /delete-items/{id}
             Method: DELETE
       Policies:
       - DynamoDBCrudPolicy:
           TableName: Items
     Tags:
-    - Key: managed-by
-      Value: CloudFormation
+    - Key: Project
+      Value: AnswerKing
     - Key: deployed-by
       Value:
         Ref: DeployedByTag
     Metadata:
       SamResourceId: DeleteItemFunction
 Outputs:
-  CategoriesApi:
-    Description: Endpoint for /categories
+  ViewCategoriesApi:
+    Description: API Gateway endpoint URL for listing all categories
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories
-  ItemsApiUrl:
-    Description: API Gateway endpoint URL for Item operations
+  ViewItemsApiUrl:
+    Description: API Gateway endpoint URL for listing all items
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items
-  DeleteApiUrl:
-    Description: API Gateway endpoint URL for Item operations
+  CreateItemsApiUrl:
+    Description: API Gateway endpoint URL for creating items
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/{id}
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/create-items
+  DeleteApiUrl:
+    Description: API Gateway endpoint URL for deleting items
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-items/{id}
