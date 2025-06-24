@@ -19,8 +19,56 @@ Resources:
       CodeUri: GetCategoriesFunction
     Metadata:
       SamResourceId: GetCategoriesFunction
+  CreateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateItemFunction
+      Handler: items/create_item.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          ITEMS_TABLE: Items
+      Events:
+        CreateItemAPI:
+          Type: Api
+          Properties:
+            Path: /items
+            Method: POST
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName: Items
+    Metadata:
+      SamResourceId: CreateItemFunction
+  DeleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteItemFunction
+      Handler: items/delete_item.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          ITEMS_TABLE: Items
+      Events:
+        DeleteItemAPI:
+          Type: Api
+          Properties:
+            Path: /items/{id}
+            Method: DELETE
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName: Items
+    Metadata:
+      SamResourceId: DeleteItemFunction
 Outputs:
   CategoriesApi:
     Description: Endpoint for /categories
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories
+  ItemsApiUrl:
+    Description: API Gateway endpoint URL for Item operations
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items
+  DeleteApiUrl:
+    Description: API Gateway endpoint URL for Item operations
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/{id}

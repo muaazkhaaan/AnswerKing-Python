@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "categories/handler.lambda_handler"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["GetCategoriesFunction"]
+functions = ["GetCategoriesFunction", "CreateItemFunction", "DeleteItemFunction"]
 
 [layer_build_definitions]

@@ -18,7 +18,53 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: Categories
 
+  CreateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: items/create_item.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          ITEMS_TABLE: Items
+      Events:
+        CreateItemAPI:
+          Type: Api
+          Properties:
+            Path: /items
+            Method: POST
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName: Items
+
+  DeleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: items/delete_item.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          ITEMS_TABLE: Items
+      Events:
+        DeleteItemAPI:
+          Type: Api
+          Properties:
+            Path: /items/{id}
+            Method: DELETE
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName: Items
+
 Outputs:
   CategoriesApi:
     Description: "Endpoint for /categories"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories"
+
+  ItemsApiUrl:
+    Description: "API Gateway endpoint URL for Item operations"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items"
+
+  DeleteApiUrl:
+    Description: "API Gateway endpoint URL for Item operations"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/{id}"
