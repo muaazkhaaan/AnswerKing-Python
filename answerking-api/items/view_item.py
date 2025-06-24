@@ -1,10 +1,9 @@
 import json
 import boto3
-import os
 from decimal import Decimal
 
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['ITEMS_TABLE'])
+table = dynamodb.Table('Items')
 
 # Encoder for Decimal (to deal with Price factor of items)
 class DecimalEncoder(json.JSONEncoder):
@@ -16,9 +15,13 @@ class DecimalEncoder(json.JSONEncoder):
 def lambda_handler(event, context):
     try:
         response = table.scan()
+        
+        # Filter out the ID auto counter
+        items = [item for item in response['Items'] if item['id'] != 'counter']
+        
         return {
             'statusCode': 200,
-            'body': json.dumps(response['Items'], cls=DecimalEncoder)
+            'body': json.dumps(items, cls=DecimalEncoder)
         }
     except Exception as e:
         return {
