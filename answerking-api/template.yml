@@ -24,8 +24,8 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: Categories
     Tags:
-        - Key: managed-by
-          Value: CloudFormation
+        - Key: Project
+          Value: AnswerKing
         - Key: deployed-by
           Value: !Ref DeployedByTag
 
@@ -48,8 +48,8 @@ Resources:
       - DynamoDBWritePolicy:
           TableName: Items
     Tags:
-        - Key: managed-by
-          Value: CloudFormation
+        - Key: Project
+          Value: AnswerKing
         - Key: deployed-by
           Value: !Ref DeployedByTag
 
@@ -72,8 +72,8 @@ Resources:
       - DynamoDBCrudPolicy:
           TableName: Items
     Tags:
-        - Key: managed-by
-          Value: CloudFormation
+        - Key: Project
+          Value: AnswerKing
         - Key: deployed-by
           Value: !Ref DeployedByTag
 
