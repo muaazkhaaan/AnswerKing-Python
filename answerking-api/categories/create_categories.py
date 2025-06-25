@@ -34,7 +34,7 @@ def lambda_handler(event, context):
 
         item = {
             'id': new_id,
-            'category': body['category'],
+            'name': body['name'],
             'description': body['description']
         }
 
