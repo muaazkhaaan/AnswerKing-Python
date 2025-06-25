@@ -25,15 +25,18 @@ def lambda_handler(event, context):
 
         body = json.loads(event['body'])
 
+        # Update builder
         update_expr = []
         expr_attr_values = {}
         expr_attr_names = {}
 
+        # name is reserved in DynamoDB need to manage safely
         if 'name' in body:
             update_expr.append('#name = :name')
             expr_attr_values[':name'] = body['name']
             expr_attr_names['#name'] = 'name'
 
+        # price must be in Decimal format
         if 'price' in body:
             update_expr.append('price = :price')
             expr_attr_values[':price'] = Decimal(str(body['price']))
@@ -48,6 +51,7 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'No valid fields to update.'})
             }
 
+        # Build the whole expression
         update_params = {
             'Key': {'id': item_id},
             'UpdateExpression': 'SET ' + ', '.join(update_expr),
@@ -59,6 +63,7 @@ def lambda_handler(event, context):
         if expr_attr_names:
             update_params['ExpressionAttributeNames'] = expr_attr_names
 
+        # Perform update
         response = table.update_item(**update_params)
 
         return {
