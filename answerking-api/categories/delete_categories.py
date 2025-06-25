@@ -6,28 +6,28 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['CATEGORIES_TABLE'])
 
 def lambda_handler(event, context):
-    item_id = event['pathParameters'].get('id')
+    category_id = event['pathParameters'].get('id')
 
-    if not item_id:
+    if not category_id:
         return {
             'statusCode': 400,
-            'body': json.dumps({'message': 'Missing item ID in path.'})
+            'body': json.dumps({'message': 'Missing category ID in path.'})
         }
 
     try:
-        response = table.delete_item(
-            Key={'id': item_id},
-            ConditionExpression='attribute_exists(id)'  # Prevents deleting non-existent items
+        table.delete_item(
+            Key={'id': category_id},
+            ConditionExpression='attribute_exists(id)'  # Prevents deleting non-existent categories
         )
         return {
             'statusCode': 200,
-            'body': json.dumps({'message': f'Item {item_id} deleted successfully.'})
+            'body': json.dumps({'message': f'Category {category_id} deleted successfully.'})
         }
 
     except dynamodb.meta.client.exceptions.ConditionalCheckFailedException:
         return {
             'statusCode': 404,
-            'body': json.dumps({'message': f'Item {item_id} not found.'})
+            'body': json.dumps({'message': f'Category {category_id} not found.'})
         }
 
     except Exception as e:
