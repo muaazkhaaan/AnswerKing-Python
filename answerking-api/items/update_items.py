@@ -6,6 +6,13 @@ from decimal import Decimal
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['ITEMS_TABLE'])
 
+# Encoder for Decimal (to deal with Price factor of items)
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        return super(DecimalEncoder, self).default(obj)
+
 def lambda_handler(event, context):
     try:
         # Ensure ID is provided in the path
@@ -59,7 +66,7 @@ def lambda_handler(event, context):
             'body': json.dumps({
                 'message': f'Item {item_id} updated successfully.',
                 'updated': response['Attributes']
-            })
+            }, cls=DecimalEncoder)
         }
 
     except dynamodb.meta.client.exceptions.ConditionalCheckFailedException:
