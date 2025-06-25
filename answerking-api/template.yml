@@ -164,6 +164,25 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: Items 
 
+  UpdateCategoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: categories/update_categories.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          CATEGORIES_TABLE: Categories
+      Events:
+        UpdateCategoryAPI:
+          Type: Api
+          Properties:
+            Path: /update-categories/{id}
+            Method: PUT
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: Categories 
+
 Outputs:
   ViewCategoriesApi:
     Description: "API Gateway endpoint URL for listing all categories"
@@ -192,3 +211,7 @@ Outputs:
   UpdateItemsUrl:
     Description: "API Gateway endpoint URL for updating an item"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-items/{id}"
+
+  UpdateCategoriesUrl:
+    Description: "API Gateway endpoint URL for updating a category"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-categories/{id}"
