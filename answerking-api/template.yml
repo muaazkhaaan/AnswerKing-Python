@@ -62,7 +62,7 @@ Resources:
         CreateItemAPI:
           Type: Api
           Properties:
-            Path: /create-items
+            Path: /items
             Method: POST
       Policies:
       - DynamoDBWritePolicy:
@@ -86,7 +86,7 @@ Resources:
         DeleteItemAPI:
           Type: Api
           Properties:
-            Path: /delete-items/{id}
+            Path: /items/{id}
             Method: DELETE
       Policies:
       - DynamoDBCrudPolicy:
@@ -110,7 +110,7 @@ Resources:
         CreateCategoryAPI:
           Type: Api
           Properties:
-            Path: /create-category
+            Path: /categories
             Method: POST
       Policies:
       - DynamoDBWritePolicy:
@@ -134,7 +134,7 @@ Resources:
         DeleteCategoryAPI:
           Type: Api
           Properties:
-            Path: /delete-category/{id}
+            Path: /categories/{id}
             Method: DELETE
       Policies:
       - DynamoDBCrudPolicy:
@@ -158,7 +158,7 @@ Resources:
         UpdateItemAPI:
           Type: Api
           Properties:
-            Path: /update-items/{id}
+            Path: /items/{id}
             Method: PUT
       Policies:
         - DynamoDBCrudPolicy:
@@ -177,7 +177,7 @@ Resources:
         UpdateCategoryAPI:
           Type: Api
           Properties:
-            Path: /update-categories/{id}
+            Path: /categories/{id}
             Method: PUT
       Policies:
         - DynamoDBCrudPolicy:
@@ -185,33 +185,33 @@ Resources:
 
 Outputs:
   ViewCategoriesApi:
-    Description: "API Gateway endpoint URL for listing all categories"
+    Description: "API Gateway endpoint URL for listing all categories // GET"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories"
 
   ViewItemsApiUrl:
-    Description: "API Gateway endpoint URL for listing all items"
+    Description: "API Gateway endpoint URL for listing all items // GET"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items"
 
   CreateItemsApiUrl:
-    Description: "API Gateway endpoint URL for creating items"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/create-items"
+    Description: "API Gateway endpoint URL for creating items // POST"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items"
 
   DeleteItemsUrl:
-    Description: "API Gateway endpoint URL for deleting an item"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-items/{id}"
+    Description: "API Gateway endpoint URL for deleting an item // DELETE"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/{id}"
 
   CreateCategoryApiUrl:
-    Description: "API Gateway endpoint URL for creating categories"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/create-category"
+    Description: "API Gateway endpoint URL for creating categories // POST"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories"
 
   DeleteCategoriesUrl:
-    Description: "API Gateway endpoint URL for deleting a category"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-category/{id}"
+    Description: "API Gateway endpoint URL for deleting a category // DELETE"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories/{id}"
 
   UpdateItemsUrl:
-    Description: "API Gateway endpoint URL for updating an item"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-items/{id}"
+    Description: "API Gateway endpoint URL for updating an item // PUT"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/{id}"
 
   UpdateCategoriesUrl:
-    Description: "API Gateway endpoint URL for updating a category"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-categories/{id}"
+    Description: "API Gateway endpoint URL for updating a category // PUT"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories/{id}"
