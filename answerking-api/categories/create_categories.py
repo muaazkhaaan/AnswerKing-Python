@@ -21,7 +21,7 @@ def lambda_handler(event, context):
         body = json.loads(event['body'])
 
         # Validate required fields except 'id'
-        required_fields = ['category', 'description']
+        required_fields = ['name', 'description']
         for field in required_fields:
             if field not in body:
                 return {
