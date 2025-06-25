@@ -7,9 +7,13 @@ table = dynamodb.Table('Categories')
 def lambda_handler(event, context):
     try:
         response = table.scan()
+
+        # Filter out the ID auto counter
+        categories = [item for item in response['Items'] if item['id'] != 'counter']
+
         return {
             'statusCode': 200,
-            'body': json.dumps(response['Items'])
+            'body': json.dumps(categories)
         }
     except Exception as e:
         return {
