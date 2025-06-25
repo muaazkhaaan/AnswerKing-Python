@@ -97,6 +97,54 @@ Resources:
         - Key: deployed-by
           Value: !Ref DeployedByTag
 
+  CreateCategoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: categories/create_categories.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          CATEGORIES_TABLE: Categories
+      Events:
+        CreateCategoryAPI:
+          Type: Api
+          Properties:
+            Path: /create-category
+            Method: POST
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName: Categories
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
+
+  DeleteCategoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: categories/delete_categories.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          CATEGORIES_TABLE: Categories
+      Events:
+        DeleteCategoryAPI:
+          Type: Api
+          Properties:
+            Path: /delete-category/{id}
+            Method: DELETE
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: Categories
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
+
 Outputs:
   ViewCategoriesApi:
     Description: "API Gateway endpoint URL for listing all categories"
@@ -110,6 +158,14 @@ Outputs:
     Description: "API Gateway endpoint URL for creating items"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/create-items"
 
-  DeleteApiUrl:
-    Description: "API Gateway endpoint URL for deleting items"
+  DeleteItemsUrl:
+    Description: "API Gateway endpoint URL for deleting an item"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-items/{id}"
+
+  CreateCategoryApiUrl:
+    Description: "API Gateway endpoint URL for creating categories"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/create-category"
+
+  DeleteCategoriesUrl:
+    Description: "API Gateway endpoint URL for deleting a category"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-category/{id}"
