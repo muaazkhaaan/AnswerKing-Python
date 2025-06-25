@@ -145,6 +145,25 @@ Resources:
         - Key: deployed-by
           Value: !Ref DeployedByTag
 
+  UpdateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: items/update_items.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          ITEMS_TABLE: Items
+      Events:
+        UpdateItemAPI:
+          Type: Api
+          Properties:
+            Path: /update-items/{id}
+            Method: PUT
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: Items 
+
 Outputs:
   ViewCategoriesApi:
     Description: "API Gateway endpoint URL for listing all categories"
@@ -169,3 +188,7 @@ Outputs:
   DeleteCategoriesUrl:
     Description: "API Gateway endpoint URL for deleting a category"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-category/{id}"
+
+  DeleteCategoriesUrl:
+    Description: "API Gateway endpoint URL for updating an item"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-items/{id}"
