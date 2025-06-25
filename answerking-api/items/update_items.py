@@ -18,16 +18,19 @@ def lambda_handler(event, context):
 
         body = json.loads(event['body'])
 
-        # Only allow updating these fields
         update_expr = []
         expr_attr_values = {}
+        expr_attr_names = {}
 
         if 'name' in body:
-            update_expr.append('name = :name')
+            update_expr.append('#name = :name')
             expr_attr_values[':name'] = body['name']
+            expr_attr_names['#name'] = 'name'
+
         if 'price' in body:
             update_expr.append('price = :price')
             expr_attr_values[':price'] = Decimal(str(body['price']))
+
         if 'category' in body:
             update_expr.append('category = :category')
             expr_attr_values[':category'] = body['category']
@@ -38,13 +41,18 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'No valid fields to update.'})
             }
 
-        response = table.update_item(
-            Key={'id': item_id},
-            UpdateExpression='SET ' + ', '.join(update_expr),
-            ExpressionAttributeValues=expr_attr_values,
-            ConditionExpression='attribute_exists(id)',  # Ensure item exists
-            ReturnValues='UPDATED_NEW'
-        )
+        update_params = {
+            'Key': {'id': item_id},
+            'UpdateExpression': 'SET ' + ', '.join(update_expr),
+            'ExpressionAttributeValues': expr_attr_values,
+            'ConditionExpression': 'attribute_exists(id)',
+            'ReturnValues': 'UPDATED_NEW'
+        }
+
+        if expr_attr_names:
+            update_params['ExpressionAttributeNames'] = expr_attr_names
+
+        response = table.update_item(**update_params)
 
         return {
             'statusCode': 200,

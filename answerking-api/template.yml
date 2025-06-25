@@ -189,6 +189,6 @@ Outputs:
     Description: "API Gateway endpoint URL for deleting a category"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/delete-category/{id}"
 
-  DeleteCategoriesUrl:
+  UpdateItemsUrl:
     Description: "API Gateway endpoint URL for updating an item"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/update-items/{id}"
