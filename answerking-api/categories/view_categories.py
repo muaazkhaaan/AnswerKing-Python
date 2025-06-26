@@ -9,7 +9,7 @@ def lambda_handler(event, context):
         response = table.scan()
 
         # Filter out the ID auto counter
-        categories = [item for item in response['Items'] if item['id'] != 'counter']
+        categories = [category for category in response['Items'] if category['id'] != 'counter']
 
         return {
             'statusCode': 200,
