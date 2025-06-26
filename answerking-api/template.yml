@@ -183,6 +183,26 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: Categories 
 
+  ViewItemsByCatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: customer/view_by_cat.lambda_handler
+      Runtime: python3.13
+      Events:
+        ApiGet:
+          Type: Api
+          Properties:
+            Path: /itemsbycat/{category}
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: Items
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
+
 Outputs:
   ViewCategoriesApi:
     Description: "API Gateway endpoint URL for listing all categories // GET"
@@ -215,3 +235,7 @@ Outputs:
   UpdateCategoriesUrl:
     Description: "API Gateway endpoint URL for updating a category // PUT"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories/{id}"
+
+  ViewItemsByCatApi:
+    Description: "API Gateway endpoint URL for listing all items filtered by a specific category // GET"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/itemsbycat/{category}"
