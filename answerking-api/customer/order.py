@@ -1,19 +1,11 @@
 import json
 import boto3
-import uuid
 from decimal import Decimal
 from datetime import datetime
 
 dynamodb = boto3.resource('dynamodb')
 orders_table = dynamodb.Table('Orders')
 items_table = dynamodb.Table('Items')
-
-# Encoder for Decimal (for response if needed)
-class DecimalEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return str(obj)
-        return super(DecimalEncoder, self).default(obj)
 
 def get_next_id():
     response = orders_table.update_item(
