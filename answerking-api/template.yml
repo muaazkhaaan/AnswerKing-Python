@@ -162,7 +162,12 @@ Resources:
             Method: PUT
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: Items 
+            TableName: Items
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag 
 
   UpdateCategoryFunction:
     Type: AWS::Serverless::Function
@@ -182,6 +187,31 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: Categories 
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
+
+  CreateOrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: customer/order.lambda_handler
+      Runtime: python3.13
+      Events:
+        ApiPost:
+          Type: Api
+          Properties:
+            Path: /orders
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: Orders
+    Tags:
+        - Key: Project
+          Value: AnswerKing
+        - Key: deployed-by
+          Value: !Ref DeployedByTag
 
 Outputs:
   ViewCategoriesApi:
@@ -215,3 +245,7 @@ Outputs:
   UpdateCategoriesUrl:
     Description: "API Gateway endpoint URL for updating a category // PUT"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categories/{id}"
+
+  CreateOrderApiUrl:
+    Description: "API Gateway endpoint URL for creating items // POST"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/orders"
