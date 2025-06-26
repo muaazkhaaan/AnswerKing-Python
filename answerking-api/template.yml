@@ -205,7 +205,9 @@ Resources:
             Path: /orders
             Method: POST
       Policies:
-        - DynamoDBCrudPolicy:
+        - DynamoDBReadPolicy:
+            TableName: Items
+        - DynamoDBWritePolicy:
             TableName: Orders
     Tags:
         - Key: Project
