@@ -1,4 +1,5 @@
 import json
+from time import timezone
 import boto3
 from decimal import Decimal
 from datetime import datetime
@@ -72,7 +73,7 @@ def lambda_handler(event, context):
             'id': get_next_id(),
             'items': validated_items,
             'total_price': total_price,
-            'timestamp': datetime.now().strftime('%d/%m/%y-%H:%M'),
+            'timestamp': datetime.now(timezone.utc),
             'status': 'Pending'
         }
 
